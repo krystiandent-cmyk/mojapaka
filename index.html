@@ -33,6 +33,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .spark{background:linear-gradient(90deg,rgba(124,220,157,.25),rgba(56,189,248,.25));height:1px;border:0;margin:26px 0}
 footer{opacity:.9}
 .note{font-size:.86rem;color:#aab3ba}
+#visit-counter{color:var(--muted)}
 .pill{display:inline-block;padding:6px 10px;border:1px dashed rgba(255,255,255,.15);border-radius:999px;font-size:.8rem;color:#dbe7de}
 .social{display:flex;gap:12px;align-items:center;margin-top:10px}
 .social a{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);transition:transform .15s ease, box-shadow .2s ease, border .2s ease}
@@ -55,7 +56,7 @@ footer{opacity:.9}
 <div class="wrap">
 <header>
   <div class="brand"><div class="logo" aria-hidden="true">MP</div><div class="brand-name">MojaPaka</div></div>
-  <div class="lang" aria-label="Language switch"><button id="btn-en" class="active">EN</button><button id="btn-pl">PL</button></div>
+<div class="lang" aria-label="Language switch"><button id="btn-en" class="active" aria-pressed="true">EN</button><button id="btn-pl" aria-pressed="false">PL</button></div>
 </header>
 
 <section class="hero">
@@ -68,6 +69,7 @@ footer{opacity:.9}
       <a id="cta-secondary" class="btn" href="#video">Watch 30s video</a>
       <span class="pill" id="web3-pill">This is a Web3/IPFS mirror</span>
     </div>
+    <div id="visit-counter" class="note" style="margin-top:12px" aria-live="polite"></div>
     <div class="check"><div class="dot"></div><div id="bullet1"><strong>Hook:</strong> “5 minutes to a gift that impresses.”</div></div>
     <div class="check"><div class="dot"></div><div id="bullet2"><strong>Mission:</strong> Save your time and nerves. Gifting should be joyful.</div></div>
     <div class="check"><div class="dot"></div><div id="bullet3"><strong>How we help:</strong> curated sets, intuitive categories, premium wrapping, real photos.</div></div>
@@ -128,7 +130,7 @@ footer{opacity:.9}
 </footer>
 </div>
 
-<div id="modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+<div id="modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true" hidden>
   <div class="modal">
     <header><h2 id="modal-title">Privacy Policy</h2><button class="close" id="modal-close" aria-label="Close">✕</button></header>
     <div id="modal-content" class="content"></div>
@@ -137,42 +139,68 @@ footer{opacity:.9}
 
 <script>
 const T={
-  en:{kicker:"Curated gift store",headline:"Tired of wrong gifts?<br>We turn them into <em>“wow”.</em>",lead:"MojaPaka solves a real problem: no ideas and no time. In minutes you’ll find a present that feels right, looks premium and arrives on time. Beautifully wrapped, ready to delight.",cta_primary:"Go to store",cta_secondary:"Watch 30s video",pill:"This is a Web3/IPFS mirror",b1:"Curated hits",b1p:"No random products. Only what people genuinely love.",b2:"Ready to gift",b2p:"Premium wrapping, greeting card, and shipping straight to the recipient.",b3:"Stress‑free",b3p:"Fast checkout, clear policies and helpful support. Gifting made easy.",final_h:"Ready to find a gift in 5 minutes?",final_p:"Click below to see ideas that instantly feel right.",final_cta:"Go to mojapaka.pl",foot:"© {year} MojaPaka • This site is a Web3/IPFS mirror. The official store lives at ",follow:"Follow us",privacy:"Privacy Policy",badge:"Watch video",video:"Product video — Diffuser",shorts:"Open on YouTube"},
-  pl:{kicker:"Sklep z trafionymi prezentami",headline:"Masz dość nietrafionych prezentów?<br>Zamieniamy je w <em>„wow”.</em>",lead:"MojaPaka rozwiązuje realny problem: brak pomysłu i brak czasu. W kilka minut znajdziesz prezent, który naprawdę cieszy, wygląda premium i dociera na czas. Pięknie zapakowany, gotowy do wręczenia.",cta_primary:"Przejdź do sklepu",cta_secondary:"Obejrzyj 30‑sek. film",pill:"To lustrzana wersja Web3/IPFS",b1:"Wyselekcjonowane hity",b1p:"Zero przypadkowości. Pokazujemy tylko to, co ludzie kochają.",b2:"Gotowe do wręczenia",b2p:"Pakowanie premium, kartka z życzeniami i wysyłka prosto do obdarowanego.",b3:"Bez stresu",b3p:"Szybkie płatności, jasne zasady i pomocny support. Prezent bez spiny.",final_h:"Gotowy znaleźć prezent w 5 minut?",final_p:"Kliknij poniżej i zobacz propozycje, które od razu trafiają.",final_cta:"Przejdź na mojapaka.pl",foot:"© {year} MojaPaka • Ten serwis jest lustrzaną wizytówką Web3/IPFS. Oficjalny sklep działa pod adresem ",follow:"Obserwuj nas",privacy:"Polityka prywatności",badge:"Obejrzyj film",video:"Film produktu — Dyfuzor",shorts:"Otwórz w YouTube"}
+  en:{kicker:"Curated gift store",headline:"Tired of wrong gifts?<br>We turn them into <em>“wow”.</em>",lead:"MojaPaka solves a real problem: no ideas and no time. In minutes you’ll find a present that feels right, looks premium and arrives on time. Beautifully wrapped, ready to delight.",cta_primary:"Go to store",cta_secondary:"Watch 30s video",pill:"This is a Web3/IPFS mirror",b1:"Curated hits",b1p:"No random products. Only what people genuinely love.",b2:"Ready to gift",b2p:"Premium wrapping, greeting card, and shipping straight to the recipient.",b3:"Stress‑free",b3p:"Fast checkout, clear policies and helpful support. Gifting made easy.",final_h:"Ready to find a gift in 5 minutes?",final_p:"Click below to see ideas that instantly feel right.",final_cta:"Go to mojapaka.pl",foot:"© {year} MojaPaka • This site is a Web3/IPFS mirror. The official store lives at ",follow:"Follow us",privacy:"Privacy Policy",visitCounter:"Your visits here: {count}",badge:"Watch video",video:"Product video — Diffuser",shorts:"Open on YouTube"},
+  pl:{kicker:"Sklep z trafionymi prezentami",headline:"Masz dość nietrafionych prezentów?<br>Zamieniamy je w <em>„wow”.</em>",lead:"MojaPaka rozwiązuje realny problem: brak pomysłu i brak czasu. W kilka minut znajdziesz prezent, który naprawdę cieszy, wygląda premium i dociera na czas. Pięknie zapakowany, gotowy do wręczenia.",cta_primary:"Przejdź do sklepu",cta_secondary:"Obejrzyj 30‑sek. film",pill:"To lustrzana wersja Web3/IPFS",b1:"Wyselekcjonowane hity",b1p:"Zero przypadkowości. Pokazujemy tylko to, co ludzie kochają.",b2:"Gotowe do wręczenia",b2p:"Pakowanie premium, kartka z życzeniami i wysyłka prosto do obdarowanego.",b3:"Bez stresu",b3p:"Szybkie płatności, jasne zasady i pomocny support. Prezent bez spiny.",final_h:"Gotowy znaleźć prezent w 5 minut?",final_p:"Kliknij poniżej i zobacz propozycje, które od razu trafiają.",final_cta:"Przejdź na mojapaka.pl",foot:"© {year} MojaPaka • Ten serwis jest lustrzaną wizytówką Web3/IPFS. Oficjalny sklep działa pod adresem ",follow:"Obserwuj nas",privacy:"Polityka prywatności",visitCounter:"Twoje wizyty tutaj: {count}",badge:"Obejrzyj film",video:"Film produktu — Dyfuzor",shorts:"Otwórz w YouTube"}
 };
 const PRIV={
   en:`<p>MojaPaka is operated by RAMENUS Sp. z o.o., ul. Żurawia 6/12 lok. 745, 00‑503 Warszawa, Poland (KRS: 0001193686, NIP: 7011276985). Contact: <a href="mailto:kontakt@mojapaka.pl">kontakt@mojapaka.pl</a>. We process data to fulfil orders, provide support, run analytics and marketing (with consent). You can exercise GDPR rights by emailing us. Last updated: ${new Date().toISOString().slice(0,10)}.</p>`,
   pl:`<p>MojaPaka prowadzona przez RAMENUS Sp. z o.o., ul. Żurawia 6/12 lok. 745, 00‑503 Warszawa (KRS: 0001193686, NIP: 7011276985). Kontakt: <a href="mailto:kontakt@mojapaka.pl">kontakt@mojapaka.pl</a>. Dane przetwarzamy w celu realizacji zamówień, wsparcia, analityki i marketingu (za zgodą). Prawa RODO realizujesz mailowo. Ostatnia aktualizacja: ${new Date().toISOString().slice(0,10)}.</p>`
 };
+const btnEn=document.getElementById('btn-en');
+const btnPl=document.getElementById('btn-pl');
 const els={kicker:document.getElementById('kicker'),headline:document.getElementById('headline'),lead:document.getElementById('lead'),
 cta_primary:document.getElementById('cta-primary'),cta_secondary:document.getElementById('cta-secondary'),
-pill:document.getElementById('web3-pill'),final_h:document.getElementById('final-h'),
+pill:document.getElementById('web3-pill'),visitCounter:document.getElementById('visit-counter'),final_h:document.getElementById('final-h'),
 final_p:document.getElementById('final-p'),final_cta:document.getElementById('final-cta'),foot:document.getElementById('foot'),
 follow:document.getElementById('follow'),badge:document.getElementById('badge-text'),videoTitle:document.getElementById('video-title'),videoNote:document.getElementById('video-note'),
 modal:document.getElementById('modal'),modalTitle:document.getElementById('modal-title'),modalContent:document.getElementById('modal-content'),
 privacyOpen:document.getElementById('privacy-open'),modalClose:document.getElementById('modal-close')};
 
+let visitCount=0;
+
 function applyLang(lang){
   const t=T[lang];const y=new Date().getFullYear();
   els.kicker.textContent=t.kicker;els.headline.innerHTML=t.headline;els.lead.textContent=t.lead;
   els.cta_primary.textContent=t.cta_primary;els.cta_secondary.textContent=t.cta_secondary;els.pill.textContent=t.pill;
+  if(els.visitCounter){
+    const text=t.visitCounter||'';
+    const formattedCount=Number.isFinite(visitCount)?visitCount.toLocaleString(lang==='pl'?'pl-PL':'en-US'):'0';
+    els.visitCounter.textContent=text.replace('{count}',formattedCount);
+  }
   els.final_h.textContent=t.final_h;els.final_p.textContent=t.final_p;els.final_cta.textContent=t.final_cta;
   els.foot.innerHTML=(t.foot||"").replace("{year}",y)+'<a href="https://mojapaka.pl/" target="_blank" rel="noopener" style="text-decoration:underline">mojapaka.pl</a>.';
   els.follow.textContent=t.follow;els.badge.textContent=t.badge;els.videoTitle.textContent=t.video;
   els.videoNote.innerHTML='Prefer Shorts? <a href="https://www.youtube.com/shorts/WDlplXz7ay4" target="_blank" rel="noopener">'+t.shorts+'</a>.';
-  document.getElementById('btn-en').classList.toggle('active',lang==='en');
-  document.getElementById('btn-pl').classList.toggle('active',lang==='pl');
+  const isEn=lang==='en';
+  btnEn.classList.toggle('active',isEn);
+  btnPl.classList.toggle('active',!isEn);
+  btnEn.setAttribute('aria-pressed',isEn?'true':'false');
+  btnPl.setAttribute('aria-pressed',!isEn?'true':'false');
   document.documentElement.lang=lang;
   els.modalTitle.textContent=(lang==='pl')?'Polityka prywatności':'Privacy Policy';
   els.modalContent.innerHTML=PRIV[lang];
   localStorage.setItem('mojapaka_lang',lang);
 }
-document.getElementById('btn-en').addEventListener('click',()=>applyLang('en'));
-document.getElementById('btn-pl').addEventListener('click',()=>applyLang('pl'));
-els.privacyOpen.addEventListener('click',(e)=>{e.preventDefault();els.modal.style.display='grid'});
-els.modalClose.addEventListener('click',()=>{els.modal.style.display='none'});
-els.modal.addEventListener('click',(e)=>{if(e.target===els.modal) els.modal.style.display='none'});
-const saved=localStorage.getItem('mojapaka_lang');applyLang(saved==='pl'?'pl':'en');document.getElementById('y').textContent=new Date().getFullYear();
+function toggleModal(open){
+  els.modal.style.display=open?'grid':'none';
+  els.modal.toggleAttribute('hidden',!open);
+  els.modal.setAttribute('aria-hidden',open?'false':'true');
+  if(open){
+    els.modalClose.focus();
+  }else{
+    els.privacyOpen.focus();
+  }
+}
+btnEn.addEventListener('click',()=>applyLang('en'));
+btnPl.addEventListener('click',()=>applyLang('pl'));
+els.privacyOpen.addEventListener('click',(e)=>{e.preventDefault();toggleModal(true)});
+els.modalClose.addEventListener('click',()=>toggleModal(false));
+els.modal.addEventListener('click',(e)=>{if(e.target===els.modal) toggleModal(false)});
+document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&els.modal.getAttribute('aria-hidden')==='false') toggleModal(false)});
+visitCount=Number.parseInt(localStorage.getItem('mojapaka_visits')||'0',10)||0;
+visitCount+=1;
+localStorage.setItem('mojapaka_visits',String(visitCount));
+const saved=localStorage.getItem('mojapaka_lang');applyLang(saved==='pl'?'pl':'en');
 </script>
-<span id="y" hidden></span>
-</body></html>
+</body>
+</html>
